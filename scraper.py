@@ -135,7 +135,6 @@ for course in enrollments['courses']:
     writeHtmlIndex(items, parent_obj, "%s/%s/index.html" % (courseDir, output_directory))
     return items
   recurseContents(contents, courseObj)
-  break # only do one for testing
 
 # Count download tasks
 print "Starting downloading of ", len(download_tasks), "files"
