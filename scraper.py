@@ -6,11 +6,12 @@
 #
 
 from api import BlackboardMobileApi
+from credentials import username, password
 
 SWIN_B2URL="https://ilearn.swin.edu.au/webapps/Bb-mobile-bb_bb60/"
 
 bb = BlackboardMobileApi(SWIN_B2URL)
-bb.login('username','password')
+bb.login(username, password)
 enrollments = bb.enrollments()
 
 def dumpContents(contents):
