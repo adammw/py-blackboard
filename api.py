@@ -15,7 +15,8 @@ except ImportError:
   sys.exit(1)
 
 def log(msg, *args):
-  sys.stderr.write("%s\n" % (msg % args))
+  #sys.stderr.write("%s\n" % (msg % args))
+  pass
 
 class BlackboardMobileApi:
   class BlackboardObject(object):
