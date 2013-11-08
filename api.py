@@ -29,7 +29,7 @@ class BlackboardMobileApi:
       self.ContentItem.course = self
       self.name = name
       self.course_id = course_id
-      self.enrollment_date = None
+      self.enrollment_date = enrollment_date
     def __repr__(self):
       return '<Course bb_id="%s" course_id="%s">' % (self.bb_id, self.course_id)
     def content(self):
@@ -67,7 +67,7 @@ class BlackboardMobileApi:
           log("TODO: parse Bb-wiki")
           #TODO
         elif map_item.attrib.has_key('contentid'):
-          item = self.ContentItem(bb_id = map_item.attrib['contentid'], name = map_item.attrib['name'], view_url = map_item.attrib['viewurl'], date_modified = map_item.attrib['datemodified'], is_folder = map_item.attrib['isfolder'])
+          item = self.ContentItem(bb_id = map_item.attrib['contentid'], name = map_item.attrib['name'], view_url = map_item.attrib['viewurl'], date_modified = map_item.attrib['datemodified'], is_folder = (map_item.attrib['isfolder'] == "true"))
           children = map_item.find('children')
           if children is not None:
             for child in children.findall('map-item'):
@@ -149,6 +149,7 @@ class BlackboardMobileApi:
       self.b2_url = self.b2_url[0:-1]
 
   def request(self, endpoint, **kwargs):
+    log('bb#request(endpoint=\'%s\')', endpoint)
     kwargs['cookies'] = self.cookies
     kwargs['method'] = kwargs.get('method', 'get')
     r = requests.request(url = self.b2_url + endpoint, **kwargs)
