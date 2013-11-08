@@ -31,6 +31,7 @@ def file_name(name):
 def fix_url(url):
   if not url.startswith("http"):
     url = SWIN_BASEURL + url
+  return url
 
 def writeJsonIndex(items, parent_obj, output_location):
   jf = open(output_location, "w")
