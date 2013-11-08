@@ -29,8 +29,8 @@ def file_name(name):
   return re.sub("[^a-zA-Z0-9\-\.\(\)\,%\&_ ]","_", name.encode('utf-8'))
 
 def fix_url(url):
-  if not uri.startswith("http"):
-    uri = SWIN_BASEURL + uri
+  if not url.startswith("http"):
+    url = SWIN_BASEURL + url
 
 def writeJsonIndex(items, parent_obj, output_location):
   jf = open(output_location, "w")
