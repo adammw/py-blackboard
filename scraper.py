@@ -28,6 +28,10 @@ def folder_name(name):
 def file_name(name):
   return re.sub("[^a-zA-Z0-9\-\.\(\)\,%\&_ ]","_", name.encode('utf-8'))
 
+def fix_url(url):
+  if not uri.startswith("http"):
+    uri = SWIN_BASEURL + uri
+
 def writeJsonIndex(items, parent_obj, output_location):
   jf = open(output_location, "w")
   parent_obj['children'] = items
@@ -42,7 +46,7 @@ def writeHtmlIndex(items, parent_obj, output_location):
       hf.write("<h2><a href=\"" + folder_name(item['name']) + "/index.html\">" + item['name'] + "</a></h2>")
     else:
       if item['view_url']:
-        hf.write("<h2><a href=\"" + item['view_url'] + "\">" + item['name'].encode('utf-8') + "</a></h2>")
+        hf.write("<h2><a href=\"" + fix_url(item['view_url']) + "\">" + item['name'].encode('utf-8') + "</a></h2>")
       else:
         hf.write("<h2>" + item['name'].encode('utf-8') + "</h2>")
       if item['body']:
@@ -147,9 +151,7 @@ for task_no in range(0, len(download_tasks)):
   print ""
   print "Downloading (%d/%d) - %s" % (task_no + 1, len(download_tasks), task[1])
   print "Connecting.."
-  uri = task[0].uri
-  if not uri.startswith("http"):
-    uri = SWIN_BASEURL + uri
+  uri = fix_url(task[0].uri)
   urllib.urlretrieve(uri, task[1], progress)
 print ""
 print "All files downloaded."
