@@ -1,11 +1,11 @@
-# 
+#
 # Blackboard Mobile API Library
-# 
+#
 # Developed by github.com/adammw, released under MIT License
 #
 
 import sys
-from urlparse import urlparse
+from urllib.parse import urlparse
 import xml.etree.ElementTree as etree
 
 try:
@@ -67,7 +67,7 @@ class BlackboardMobileApi:
         elif link_type == 'Bb-wiki':
           log("TODO: parse Bb-wiki")
           #TODO
-        elif map_item.attrib.has_key('contentid'):
+        elif 'contentid' in map_item.attrib:
           item = self.ContentItem(bb_id = map_item.attrib['contentid'], name = map_item.attrib['name'], view_url = map_item.attrib['viewurl'], date_modified = map_item.attrib['datemodified'], is_folder = (map_item.attrib['isfolder'] == "true"))
           children = map_item.find('children')
           if children is not None:
@@ -144,7 +144,7 @@ class BlackboardMobileApi:
 
     if parsed_url.scheme != 'https':
       log("Warning: Not using SSL, your password will be exposed in plaintext!")
-    
+
     # We don't want a trailing slash, we do that ourselves
     if b2_url.endswith('/'):
       self.b2_url = self.b2_url[0:-1]
