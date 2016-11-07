@@ -108,6 +108,8 @@ class BlackboardMobileApi:
       return '<ContentItem bb_id="%s" name="%s" is_folder="%s">' % (self.bb_id, self.name, self.is_folder)
     def detail(self, rich_content_level = 'RICH'):
       resp = self.parent.request('/contentDetail', params={'course_id': self.course.bb_id, 'content_id': self.bb_id, 'rich_content_level': rich_content_level})
+      if resp.attrib['status'] != 'OK':
+        return {'error': resp.attrib['status']}
       content = resp.find('content')
       attachments = []
       attachments_el = content.find('attachments')
