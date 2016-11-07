@@ -130,29 +130,6 @@ for course in enrollments['courses']:
       print("Traversing %s/ (%d/%d)" % (output_directory, i+1, len(contents)))
 
       content = contents[i]
-      # Download the body text for the content
-      detail = content.detail()
-
-      # Locate and download attachments (sequentially)
-      attachments = []
-      for attachment in detail['attachments']:
-        download_location = "%s/%s" % (output_directory, file_name(attachment.name))
-
-        # work around bug where urls are generated for the wrong course
-        match = re.search('/courses/1/(.+?)/content', attachment.uri)
-        if match and match.group(1) != course.course_id:
-          attachment.uri = attachment.uri.replace(match.group(1), course.course_id)
-
-        attachments.append({
-          'type': 'attachment',
-          'name': attachment.name,
-          'uri': attachment.uri,
-          'file_size': attachment.file_size,
-          'link_label': attachment.link_label,
-          'date_modified': attachment.date_modified,
-          'download_location': download_location
-        })
-        download_attachment(attachment, "%s/%s" % (courseDir, download_location))
 
       contentObj = {
         'type': 'content',
@@ -161,9 +138,38 @@ for course in enrollments['courses']:
         'view_url': content.view_url,
         'date_modified': content.date_modified,
         'is_folder': content.is_folder,
-        'body': detail['body'],
-        'attachments': attachments
+        'body': None,
+        'attachments': []
       }
+
+      # Download the body text for the content
+      detail = content.detail()
+
+      if 'error' in detail:
+        print("\nERROR: %s" % detail['error'])
+      else:
+        # Save detail of folder body
+        contentObj['body'] = detail['body']
+
+        # Locate and download attachments (sequentially)
+        for attachment in detail['attachments']:
+          download_location = "%s/%s" % (output_directory, file_name(attachment.name))
+
+          # work around bug where urls are generated for the wrong course
+          match = re.search('/courses/1/(.+?)/content', attachment.uri)
+          if match and match.group(1) != course.course_id:
+            attachment.uri = attachment.uri.replace(match.group(1), course.course_id)
+
+          contentObj['attachments'].append({
+            'type': 'attachment',
+            'name': attachment.name,
+            'uri': attachment.uri,
+            'file_size': attachment.file_size,
+            'link_label': attachment.link_label,
+            'date_modified': attachment.date_modified,
+            'download_location': download_location
+          })
+          download_attachment(attachment, "%s/%s" % (courseDir, download_location))
 
       # Recurse through the children
       if content.is_folder:
